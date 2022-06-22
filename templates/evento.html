@@ -4,24 +4,27 @@
 <h2>Evento</h2>
 
 <form action="submit/" method="post"> {% csrf_token %}
+    <input name="id" value="{{ evento.id }}" hidden />
+
     <label>Título</label>
     <br>
-    <input type="text" name="titulo" size="22">
+    <input type="text" name="titulo" size="22" value="{{ evento.titulo }}" />
     <br>
 
     <label>Data do evento</label>
     <br>
-    <input type="datetime-local" name="data_evento">
+    <input type="datetime-local" name="data_evento" value="{{ evento.get_data_input_evento }}" />
     <br>
 
     <label>Local do evento</label>
     <br>
-    <input type="text" name="local" size="22">
+    <input type="text" name="local" size="22"
+        value="{% if evento.local is None %}{% else %}{{ evento.local }}{% endif %}" />
     <br>
 
     <label>Descrição</label>
     <br>
-    <textarea name="descricao" cols="23" rows="5"></textarea>
+    <textarea name="descricao" cols="23" rows="5">{{ evento.descricao }}</textarea>
     <br>
     <br>
 
