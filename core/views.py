@@ -2,7 +2,7 @@ from datetime import datetime, timedelta
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from django.http import Http404, JsonResponse
+from django.http import Http404, HttpResponseForbidden, JsonResponse
 from django.shortcuts import redirect, render, HttpResponse
 from core.models import *
 
@@ -35,19 +35,36 @@ def logout_user(request):
     return redirect('/')
 
 
+@login_required(login_url='/login/')
 def get_event_date_by_title(request, titulo_evento):
-    return HttpResponse(f'{Evento.objects.get(titulo=titulo_evento).data_evento:A data do evento é %x às %X}')
+    try:
+        event = Evento.objects.get(titulo=titulo_evento)
+
+        if event.usuario == request.user:
+            return HttpResponse(f'{event.data_evento:A data do evento é %x às %X}')
+        else:
+            raise HttpResponseForbidden()
+    except Evento.DoesNotExist:
+        raise Http404()
 
 
 @login_required(login_url='/login/')
 def list_events(request):
-    user = request.user
     event_passed_date = datetime.now() - timedelta(hours=1)
-    events = Evento.objects.filter(usuario=user,
-                                   data_evento__gt=event_passed_date)
-    response = {'eventos': events}
+    events = Evento.objects.filter(usuario=request.user,
+                                   data_evento__gt=event_passed_date).order_by('data_evento')
+    data = {'eventos': events}
 
-    return render(request, 'agenda.html', response)
+    return render(request, 'eventos-futuros.html', data)
+
+
+def list_passed_events(request):
+    event_passed_date = datetime.now() - timedelta(hours=1)
+    events = Evento.objects.filter(usuario=request.user,
+                                   data_evento__lt=event_passed_date).order_by('data_evento')
+    data = {'eventos': events}
+
+    return render(request, 'eventos-passados.html', data)
 
 
 @login_required(login_url='/login/')
@@ -99,17 +116,15 @@ def submit_event(request):
 
 @login_required(login_url='/login/')
 def delete_event(request, id_evento):
-    user = request.user
-
     try:
         event = Evento.objects.get(id=id_evento)
-    except Evento.DoesNotExist:
-        raise Http404()
 
-    if event.usuario == user:
-        event.delete()
-        return redirect('/')
-    else:
+        if event.usuario == request.user:
+            event.delete()
+            return redirect('/')
+        else:
+            raise HttpResponseForbidden()
+    except Evento.DoesNotExist:
         raise Http404()
 
 

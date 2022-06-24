@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 from django.db import models
 from django.contrib.auth.models import *
 
@@ -29,7 +29,7 @@ class Evento(models.Model):
         return self.data_evento.strftime('%Y-%m-%dT%H:%M')
 
     def has_passed(self):
-        if self.data_evento < datetime.now():
-            return True
-        else:
-            return False
+        return self.data_evento < datetime.now() and self.data_evento > datetime.now() - timedelta(hours=1)
+
+    def will_happen_soon(self):
+        return self.data_evento < datetime.now() + timedelta(hours=1) and self.data_evento > datetime.now()

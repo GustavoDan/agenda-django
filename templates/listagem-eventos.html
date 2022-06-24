@@ -1,16 +1,9 @@
-{% extends "model-page.html" %}
-
-{% block content%}
-<h2>Agendamentos</h2>
-
-<a href="evento/">
-    <button type="button">Novo Evento</button>
-</a>
-
 <ul style="font-size: 18px">
     {% for evento in eventos %}
     <li>
-        <span {% if evento.has_passed %} style="color:red" {% endif %}>
+        <span style="color:{% if evento.has_passed %}red
+            {% elif evento.will_happen_soon %}#C9A529
+            {% else %}black{% endif %}">
             {{evento.titulo}} - {{evento.get_data_evento}}
         </span>
         ( <a href="evento/?id={{ evento.id }}">Editar</a>
@@ -18,4 +11,3 @@
     </li>
     {% endfor %}
 </ul>
-{% endblock %}
