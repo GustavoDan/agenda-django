@@ -1,6 +1,8 @@
+from datetime import datetime, timedelta
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.http import Http404, JsonResponse
 from django.shortcuts import redirect, render, HttpResponse
 from core.models import *
 
@@ -40,7 +42,9 @@ def get_event_date_by_title(request, titulo_evento):
 @login_required(login_url='/login/')
 def list_events(request):
     user = request.user
-    events = Evento.objects.filter(usuario=user)
+    event_passed_date = datetime.now() - timedelta(hours=1)
+    events = Evento.objects.filter(usuario=user,
+                                   data_evento__gt=event_passed_date)
     response = {'eventos': events}
 
     return render(request, 'agenda.html', response)
@@ -70,25 +74,25 @@ def submit_event(request):
         event_date = request.POST.get('data_evento')
         description = request.POST.get('descricao')
 
-        if event_id is None:
+        if not event_id:
             Evento.objects.create(usuario=user,
                                   titulo=title,
                                   data_evento=event_date,
                                   local=event_location,
                                   descricao=description)
         else:
-            event = Evento.objects.get(event_id=event_id)
+            # Evento.objects.filter(id=event_id).update(titulo=title,
+            #                                          data_evento=event_date,
+            #                                          local=event_location,
+            #                                          descricao=description)
+            event = Evento.objects.get(id=event_id)
 
             if event.usuario == user:
-                event.update(titulo=title,
-                             data_evento=event_date,
-                             local=event_location,
-                             descricao=description)
-                # event.titulo = title
-                # event.local=event_location
-                # event.data_evento=event_date
-                # event.descricao=description
-                # event.save()
+                event.titulo = title
+                event.local = event_location
+                event.data_evento = event_date
+                event.descricao = description
+                event.save()
 
     return redirect('/')
 
@@ -96,9 +100,20 @@ def submit_event(request):
 @login_required(login_url='/login/')
 def delete_event(request, id_evento):
     user = request.user
-    event = Evento.objects.get(id=id_evento)
+
+    try:
+        event = Evento.objects.get(id=id_evento)
+    except Evento.DoesNotExist:
+        raise Http404()
 
     if event.usuario == user:
         event.delete()
+        return redirect('/')
+    else:
+        raise Http404()
 
-    return redirect('/')
+
+def json_list_events(request, id_usuario):
+    user = User.objects.get(id=id_usuario)
+    events = Evento.objects.filter(usuario=user).values('id', 'titulo')
+    return JsonResponse(list(events), safe=False, json_dumps_params={'indent': 4, 'ensure_ascii': False})

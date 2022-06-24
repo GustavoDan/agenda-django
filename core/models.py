@@ -1,4 +1,4 @@
-from threading import local
+from datetime import datetime
 from django.db import models
 from django.contrib.auth.models import *
 
@@ -27,3 +27,9 @@ class Evento(models.Model):
 
     def get_data_input_evento(self):
         return self.data_evento.strftime('%Y-%m-%dT%H:%M')
+
+    def has_passed(self):
+        if self.data_evento < datetime.now():
+            return True
+        else:
+            return False

@@ -29,5 +29,6 @@ urlpatterns = [
     path('agenda/', views.list_events),
     path('agenda/evento/', views.add_update_event),
     path('agenda/evento/submit/', views.submit_event),
-    path('agenda/evento/delete/<int:id_evento>', views.delete_event),
+    path('agenda/evento/delete/<int:id_evento>/', views.delete_event),
+    path('agenda/lista/<int:id_usuario>/', views.json_list_events),
 ]
