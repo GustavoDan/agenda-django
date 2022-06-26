@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Agenda</title>
+  <style>
+    ul {
+      text-align: center;
+    }
+
+    li {
+      display: inline-block;
+    }
+
+    #error-list {
+      color: red;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+
+<body>
+  <form action="{% url 'login' %}" method="post"> {% csrf_token %}
+    <div align="center">
+      <h1>Login</h1>
+      {{ form }}
+
+      <button type="submit">Logar</button>
+
+      {% if form.errors %}
+      <div align="center" id="error-list">
+        {% for error in form.errors.items %}
+        {% if error.0 == '__all__' %}
+        {{ error.1 }}
+
+        {% else %}
+        <strong>{{ error.0|capfirst }}:</strong> {{ error.1|striptags }}
+        <br>
+        {% endif %}
+        {% endfor %}
+      </div>
+      {% endif %}
+    </div>
+  </form>
+</body>
+
+</html>

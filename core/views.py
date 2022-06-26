@@ -6,29 +6,8 @@ from django.http import Http404, HttpResponseForbidden, JsonResponse
 from django.shortcuts import redirect, render, HttpResponse
 from core.models import *
 
+
 # Create your views here.
-# def index(request):
-#     return redirect('agenda/')
-
-
-def login_user(request):
-    return render(request, 'login.html')
-
-
-def submit_login(request):
-    if request.POST:
-        username = request.POST.get('username')
-        password = request.POST.get('password')
-
-        user = authenticate(username=username, password=password)
-        if user is not None:
-            login(request, user)
-        else:
-            messages.error(request, "Usuário ou senha inválidos")
-
-    return redirect('/')
-
-
 def logout_user(request):
     logout(request)
 
@@ -55,7 +34,7 @@ def list_events(request):
                                    data_evento__gt=event_passed_date).order_by('data_evento')
     data = {'eventos': events}
 
-    return render(request, 'eventos-futuros.html', data)
+    return render(request, 'agenda.html', data)
 
 
 def list_passed_events(request):
