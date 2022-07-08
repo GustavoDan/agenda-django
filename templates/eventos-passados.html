@@ -1,12 +1,10 @@
 {% extends "model-page.html" %}
-
-{% block content%}
-
-<h2>Eventos passados</h2>
-<a href="/agenda/">
-    <button type="button">Voltar</button>
-</a>
-
-{% include "listagem-eventos.html" %}
-
+{% block content %}
+    <span class="subtitle">Eventos passados</span>
+    <div class="actions">
+        <button class="action-button"
+                type="button"
+                onclick="location.href = /agenda/">Voltar</button>
+    </div>
+    {% include "listagem-eventos.html" %}
 {% endblock %}

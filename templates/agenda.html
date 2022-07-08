@@ -1,17 +1,9 @@
 {% extends "model-page.html" %}
-
-{% block content%}
-
-<h2>Agendamentos</h2>
-
-<a href="evento/" style="display:inline-block; margin-right: 10px;">
-    <button type="button">Novo Evento</button>
-</a>
-
-<a href="passados/">
-    <button type="button">Eventos Passados</button>
-</a>
-
-{% include "listagem-eventos.html" %}
-
-{% endblock %}
+{% block content %}
+    <span class="subtitle">Agendamentos</span>
+    <div class="actions">
+        <button class="action-button" onclick="location.href += 'evento/'">Novo Evento</button>
+        <button class="action-button" onclick="location.href += 'passados/'">Eventos Passados</button>
+    </div>
+    {% include "listagem-eventos.html" %}
+{% endblock content %}
