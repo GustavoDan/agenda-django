@@ -1,6 +1,7 @@
 {% extends '../model-page.html' %}
 {% load filters_and_tags %}
 {% block content %}
+    <span id="toggle-login-register">Ainda não tem uma conta? <a href="/register/">Registrar-se</a></span>
     <span class="subtitle">Login</span>
     <form action="{% url 'login' %}" method="post">
         {% csrf_token %}

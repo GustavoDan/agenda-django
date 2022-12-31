@@ -194,7 +194,23 @@ footer {
     border: 5px solid gold;
     border-radius: 50px;
     padding: 20px;
-    margin-bottom: 15px;
+    margin-top: 10px;
     gap: 5px;
     color: teal;
+}
+
+#toggle-login-register {
+    margin-bottom: 10px;
+    color: teal;
+}
+
+#toggle-login-register a {
+    color: lightseagreen;
+
+    transition: 300ms;
+
+}
+
+#toggle-login-register a:hover {
+    color: darkseagreen;
 }

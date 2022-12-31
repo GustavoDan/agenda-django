@@ -1,16 +1,11 @@
 {% extends '../model-page.html' %}
 {% load filters_and_tags %}
 {% block content %}
+    <span id="toggle-login-register">Já tem uma conta? <a href="/login/">Fazer login</a></span>
     <span class="subtitle">Registrar</span>
     <form action="" method="post">
         {% csrf_token %}
         <div class="form">
-            <div id="register-help">
-                O campo usuário deve conter {% replace form.username.help_text 'Obrigatório.' '' %}
-                {% for line in form.password1.help_text|striptags|split:'.' %}
-                    <span>{{ line }}</span>
-                {% endfor %}
-            </div>
             {{ form.username.label }} {{ form.username }}
             {{ form.password1.label }} {{ form.password1 }}
             {{ form.password2.label }} {{ form.password2 }}
@@ -25,6 +20,12 @@
                     {% endfor %}
                 </div>
             {% endif %}
+            <div id="register-help">
+                O campo usuário deve conter {% replace form.username.help_text 'Obrigatório.' '' %}
+                {% for line in form.password1.help_text|striptags|split:'.' %}
+                    <span>{{ line }}</span>
+                {% endfor %}
+            </div>
         </div>
     </form>
 {% endblock content %}
