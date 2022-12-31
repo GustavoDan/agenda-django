@@ -23,6 +23,7 @@ urlpatterns = [
     #path('', views.index),
     path('', RedirectView.as_view(url='agenda/')),
     path('admin/', admin.site.urls),
+    path('register/', views.register_user),
     path('login/', LoginView.as_view(), name='login'),
     path('logout/', views.logout_user),
     path('eventos/<titulo_evento>/', views.get_event_date_by_title),

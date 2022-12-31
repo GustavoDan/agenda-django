@@ -1,0 +1,30 @@
+{% extends '../model-page.html' %}
+{% load filters_and_tags %}
+{% block content %}
+    <span class="subtitle">Registrar</span>
+    <form action="" method="post">
+        {% csrf_token %}
+        <div class="form">
+            <div id="register-help">
+                O campo usuário deve conter {% replace form.username.help_text 'Obrigatório.' '' %}
+                {% for line in form.password1.help_text|striptags|split:'.' %}
+                    <span>{{ line }}</span>
+                {% endfor %}
+            </div>
+            {{ form.username.label }} {{ form.username }}
+            {{ form.password1.label }} {{ form.password1 }}
+            {{ form.password2.label }} {{ form.password2 }}
+            <div class="actions">
+                <button class="blue-button" type="submit">Registrar</button>
+            </div>
+            {% if form.errors %}
+                <div id="error-list" class="margin-top">
+                    <strong>Erro:</strong>
+                    {% for error in form.errors.items %}
+                        {% for line in error.1 %}<span>{{ line }}</span>{% endfor %}
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+    </form>
+{% endblock content %}

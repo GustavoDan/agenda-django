@@ -1,6 +1,7 @@
 from datetime import datetime, timedelta
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 from django.forms import ValidationError
 from django.http import Http404, HttpResponseForbidden, JsonResponse
@@ -9,6 +10,19 @@ from core.models import *
 
 
 # Create your views here.
+def register_user(request):
+    if request.method == "POST":
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect("/")
+    else:
+        form = UserCreationForm()
+    
+    data = {"form": form}
+    return render(request, "registration/register.html", data)
+
+
 def logout_user(request):
     logout(request)
 

@@ -1,4 +1,5 @@
 {% load static %}
+{% load filters_and_tags %}
 <!DOCTYPE html>
 <html lang="pt-br">
     <head>
@@ -15,7 +16,9 @@
     <body>
         <header>
             <button id="title" onclick="location.href = '/'">Agenda</button>
-            {% if request.path != '/login/' %}<button id="logout" onclick="location.href = /logout/">Logout</button>{% endif %}
+            {% if request.path not in '/login/, /register/'|split:", " %}
+                <button class="blue-button" id="logout" onclick="location.href = /logout/">Logout</button>
+            {% endif %}
         </header>
         {% block page %}
         {% endblock page %}
