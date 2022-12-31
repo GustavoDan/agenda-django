@@ -1,27 +1,27 @@
 {% extends '../model-page.html' %}
+{% load filters_and_tags %}
 {% block content %}
     <span class="subtitle">Login</span>
     <form action="{% url 'login' %}" method="post">
         {% csrf_token %}
         <div class="form">
-            {{ form.username.label }} {{ form.username }} {{ form.password.label }}
-            {{ form.password }}
+            {{ form.username.label }} {{ form.username }}
+            {{ form.password.label }} {{ form.password }}
             <div class="actions">
-                <button id="login" type="submit">Logar</button>
+                <button class="blue-button" type="submit">Logar</button>
             </div>
+            {% if form.errors %}
+                <div id="error-list" class="margin-top">
+                    <strong>Erro:</strong>
+                    {% for error in form.errors.items %}
+                        {% if error.0 == '__all__' %}
+                            <span>{{ error.1|striptags }}</span>
+                        {% else %}
+                            <span>O campo {{ error.0|capfirst }} {% replace error.1|striptags 'Este campo' '' %}</span>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            {% endif %}
         </div>
     </form>
-    {% if form.errors %}
-        <div id="error-list" class="margin-top">
-            {% for error in form.errors.items %}
-                {% if error.0 == '__all__' %}
-                    <span>{{ error.1|striptags }}</span>
-                {% else %}
-                    <span>
-                        <strong>{{ error.0|capfirst }}:</strong> {{ error.1|striptags }}
-                    </span>
-                {% endif %}
-            {% endfor %}
-        </div>
-    {% endif %}
 {% endblock content %}
