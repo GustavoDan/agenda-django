@@ -5,7 +5,4 @@ https://web.dio.me/
 ## Link para teste do site
 https://gustavodan.pythonanywhere.com/
 
-Usuário: user
-Senha: user
-
 Futuramente adicionarei a possibilidade de modificar a senha.
