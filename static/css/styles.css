@@ -181,6 +181,14 @@ footer {
     margin-top: 15px;
 }
 
+.success-message {
+    background: limegreen;
+    color: white;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 15px;
+}
+
 #error-list {
     display: flex;
     flex-direction: column;
@@ -208,7 +216,6 @@ footer {
     color: lightseagreen;
 
     transition: 300ms;
-
 }
 
 #toggle-login-register a:hover {

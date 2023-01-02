@@ -1,17 +1,18 @@
 {% extends '../model-page.html' %}
 {% load filters_and_tags %}
 {% block content %}
-    <span id="toggle-login-register">Já tem uma conta? <a href="/login/">Fazer login</a></span>
+
+    <span id="toggle-login-register">Já tem uma conta? <a href="{% url 'login' %}">Fazer login</a></span>
+    
     <span class="subtitle">Registrar</span>
-    <form action="" method="post">
-        {% csrf_token %}
+    <form action="" method="post"> {% csrf_token %}
         <div class="form">
-            {{ form.username.label }} {{ form.username }}
-            {{ form.password1.label }} {{ form.password1 }}
-            {{ form.password2.label }} {{ form.password2 }}
+            {% for field in form %}{{ field.label }} {{ field }}{% endfor %}
+
             <div class="actions">
                 <button class="blue-button" type="submit">Registrar</button>
             </div>
+
             {% if form.errors %}
                 <div id="error-list" class="margin-top">
                     <strong>Erro:</strong>
@@ -20,6 +21,7 @@
                     {% endfor %}
                 </div>
             {% endif %}
+
             <div id="register-help">
                 O campo usuário deve conter {% replace form.username.help_text 'Obrigatório.' '' %}
                 {% for line in form.password1.help_text|striptags|split:'.' %}
@@ -28,4 +30,5 @@
             </div>
         </div>
     </form>
+
 {% endblock content %}
