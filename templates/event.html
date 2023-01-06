@@ -1,0 +1,17 @@
+{% extends "model-page.html" %}
+{% block content %}
+    <span class="subtitle">Evento</span>
+
+    <form action="" method="post"> {% csrf_token %}
+        {% for field in form %}
+            {{ field.label }} {{ field }}
+        {% endfor %}
+
+        <div class="actions">
+            <button class="action-button" type="submit">Salvar</button>
+            <button class="action-button" type="button" onclick="window.location.href = '{% url 'root' %}'">Cancelar</button>
+        </div>
+
+        {% include 'errors.html' %}
+    </form>
+{% endblock content %}

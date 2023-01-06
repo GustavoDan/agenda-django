@@ -1,15 +1,14 @@
 body {
+    height: 100vh;
     margin: 0;
     display: flex;
     flex-direction: column;
-    align-items: center;
 
     background-color: lightcyan;
     font-family: "Roboto", sans-serif;
 }
 
 header {
-    width: 100%;
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -44,12 +43,17 @@ footer {
     justify-content: center;
     align-items: center;
 
-    position: fixed;
-    bottom: 0;
-    left: 0;
-
     background-color: gainsboro;
     user-select: none;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    margin-top: 15px;
 }
 
 .margin-top {
@@ -79,16 +83,44 @@ footer {
     color: darkblue;
 }
 
-#logout {
+#right-panel {
+    display: flex;
     position: absolute;
     right: 0;
     margin-right: 1%;
+}
 
-    border-radius: 20px;
-    padding: 18px;
-    font-size: 2.2rem;
+#right-panel * {
+    background: lightslategray;
+    border: 5px solid darkslategray;
+    padding: 7px 10px;
 
-    transition: 300ms;
+    font-size: 1.9rem;
+    font-family: "Finlandica", sans-serif;
+    color: white;
+}
+
+#right-panel *:first-child {
+    border-right: 2px solid darkslategray;
+    border-radius: 20px 0 0 20px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 15vw;
+  }
+
+#right-panel *:last-child {
+    border-left: 2px solid darkslategray;
+    border-radius: 0 20px 20px 0;
+}
+
+#right-panel *:hover {
+    color: lightgray;
+    cursor: pointer;
+}
+
+#right-panel *:active {
+    border-style: ridge;
+    color: lightgray;
 }
 
 #title {
@@ -113,8 +145,8 @@ footer {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    margin-top: 10px;
+    flex-grow: 1;
+    margin: 10px 0;
 }
 
 .subtitle {
@@ -134,6 +166,7 @@ footer {
     border-radius: 10px;
     padding: 10px;
     cursor: pointer;
+    user-select: none;
 
     background-color: coral;
 
@@ -150,6 +183,7 @@ footer {
 }
 
 #event-list {
+    padding: 0;
     margin: 0;
     margin-top: 10px;
     font-size: 18px;
@@ -172,21 +206,18 @@ footer {
     color: goldenrod;
 }
 
-.form {
+.message-container {
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
-    text-align: center;
-    margin-top: 15px;
 }
 
 .success-message {
     background: limegreen;
     color: white;
     padding: 10px;
-    margin-bottom: 10px;
     border-radius: 15px;
+    margin-bottom: 15px;
 }
 
 #error-list {
@@ -196,7 +227,19 @@ footer {
     color: red;
 }
 
-#register-help {
+.error-list-line {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.error-list-column {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-help {
     display: flex;
     flex-direction: column;
     border: 5px solid gold;
@@ -220,4 +263,59 @@ footer {
 
 #toggle-login-register a:hover {
     color: darkseagreen;
+}
+
+.input-with-action {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 4px 0 10px 0;
+}
+
+.input-with-action input {
+    margin: 0;
+}
+
+.input-action {
+    font-size: 0.9rem;
+    color: blue;
+
+    position: absolute;
+    right: -25%;
+
+    user-select: none;
+}
+
+.input-action-enabled {
+    right: -35%;
+}
+
+.input-action:hover {
+    color: deepskyblue;
+}
+
+.fade-out {
+    animation: fade-out 750ms forwards;
+}
+
+.change-password-link {
+    margin-top: 15px;
+}
+
+input[readonly] {
+    cursor: default;
+    background-color: rgba(239, 239, 239, 0.3);
+    color: rgb(84, 84, 84);
+    border-color: rgba(118, 118, 118, 0.3);
+}
+
+@keyframes fade-out {
+    to {
+        opacity: 0;
+        height: 0;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+    }
 }

@@ -1,0 +1,11 @@
+{% extends "model-page.html" %}
+{% block content %}
+    <span class="subtitle">Agendamentos</span>
+
+    <div class="actions">
+        <button class="action-button" onclick="location.href = '{% url 'event' %}'">Novo Evento</button>
+        <button class="action-button" onclick="location.href = '{% url 'past-schedules' %}'">Eventos Passados</button>
+    </div>
+
+    {% include "list-events.html" %}
+{% endblock content %}

@@ -1,0 +1,8 @@
+{% extends "model-page.html" %}
+{% block content %}
+    <span class="subtitle">Eventos passados</span>
+    <div class="actions">
+        <button class="action-button" onclick="location.href = '{% url 'root' %}'">Voltar</button>
+    </div>
+    {% include "list-events.html" %}
+{% endblock %}

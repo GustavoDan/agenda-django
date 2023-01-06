@@ -15,22 +15,21 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.contrib.auth.views import LoginView
-from django.urls import path
+from django.urls import path, reverse_lazy
 from django.views.generic import RedirectView
 from core import views
 
 urlpatterns = [
-    # path('', views.index),
-    path("", RedirectView.as_view(url="agenda/"), name="root"),
+    path("", RedirectView.as_view(url=reverse_lazy("root"))),
     path("admin/", admin.site.urls),
     path("register/", views.register_user, name="register"),
-    path("login/", LoginView.as_view(redirect_authenticated_user=True), name="login"),
+    path("login/", LoginView.as_view(redirect_authenticated_user=True, template_name='user/login.html'), name="login"),
     path("logout/", views.logout_user, name="logout"),
-    path("eventos/<titulo_evento>/", views.get_event_date_by_title),
-    path("agenda/", views.list_events),
-    path("agenda/passados/", views.list_passed_events),
-    path("agenda/evento/", views.add_update_event),
-    path("agenda/evento/submit/", views.submit_event),
-    path("agenda/evento/delete/<int:id_evento>/", views.delete_event),
-    path("agenda/lista/<int:id_usuario>/", views.json_list_events),
+    path("user/", views.user_page, name="user"),
+    path("user/change-password/", views.CustomPasswordChangeView.as_view(), name="change-password"),
+    path("schedules/", views.list_events, name="root"),
+    path("schedules/past/", views.list_passed_events, name="past-schedules"),
+    path("schedules/event/", views.create_or_update_event, name="event"),
+    path("schedules/event/<int:event_id>/delete", views.delete_event, name="delete_event"),
+    path("schedules/json/<int:user_id>/", views.json_list_events),
 ]

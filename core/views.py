@@ -1,146 +1,139 @@
 from datetime import datetime, timedelta
 from django.contrib import messages
 from django.contrib.auth import logout
+from django.contrib.auth.views import PasswordChangeView
 from django.contrib.auth.decorators import login_required
-from django.forms import ValidationError
-from django.http import Http404, HttpResponseForbidden, JsonResponse
-from django.shortcuts import redirect, render, HttpResponse
-from core.models import *
-from core.forms import *
+from django.http import HttpResponseNotFound, HttpResponseForbidden, JsonResponse
+from django.shortcuts import redirect, render
+from django.urls import reverse_lazy
+from django.forms.models import model_to_dict
+
+from core import forms
+from core import models
+
+
+class CustomPasswordChangeView(PasswordChangeView):
+    success_url = reverse_lazy("user")
+    template_name = "user/change-password.html"
+
+    def form_valid(self, form):
+        messages.success(self.request, "Sua senha foi modificada com sucesso!!!")
+        return super().form_valid(form)
 
 
 # Create your views here.
 def register_user(request):
     if request.user.is_authenticated:
-        return redirect("/")
+        return redirect("root")
 
-    if request.method == "POST":
-        form = RegisterForm(request.POST)
-        if form.is_valid():
-            form.save()
+    form = forms.RegisterUserForm(request.POST or None)
+    if request.method == "POST" and form.is_valid():
+        form.save()
 
-            username = form.cleaned_data.get("username")
-            messages.success(request, f"Usuário {username} criado com sucesso!!!")
-
-            return redirect("login")
-    else:
-        form = RegisterForm()
+        username = form.cleaned_data.get("username")
+        messages.success(request, f"Usuário {username} criado com sucesso!!!")
+        return redirect("login")
 
     data = {"form": form}
-    return render(request, "registration/register.html", data)
+    return render(request, "user/register.html", data)
 
 
+@login_required()
 def logout_user(request):
     logout(request)
+    return redirect("root")
 
-    return redirect("/")
 
+@login_required()
+def user_page(request):
+    user = request.user
+    form = forms.UpdateUserForm(request.POST or None, instance=user)
 
-@login_required(login_url="/login/")
-def get_event_date_by_title(request, titulo_evento):
-    try:
-        event = Evento.objects.get(titulo=titulo_evento)
-
-        if event.usuario == request.user:
-            return HttpResponse(f"{event.data_evento:A data do evento é %x às %X}")
+    if request.method == "POST":
+        old_user_data = model_to_dict(user)
+        
+        if form.is_valid():
+            if model_to_dict(user) != old_user_data: 
+                form.save()
+                messages.success(request, "Perfil atualizado com sucesso!!!")
+            
+            return redirect("user")
         else:
-            raise HttpResponseForbidden()
-    except Evento.DoesNotExist:
-        raise Http404()
+            form.data = old_user_data
+            user.username = old_user_data.get("username")
+        
+    data = {"form": form}
+    return render(request, "user/profile.html", data)
 
 
-@login_required(login_url="/login/")
+@login_required()
 def list_events(request):
     event_passed_date = datetime.now() - timedelta(hours=1)
-    events = Evento.objects.filter(
-        usuario=request.user, data_evento__gt=event_passed_date
-    ).order_by("data_evento")
-    data = {"eventos": events}
-
-    return render(request, "agenda.html", data)
+    events = models.Event.objects.filter(user=request.user, event_date__gt=event_passed_date).order_by("event_date")
+    
+    data = {"events": events}
+    return render(request, "schedules.html", data)
 
 
+@login_required()
 def list_passed_events(request):
     event_passed_date = datetime.now() - timedelta(hours=1)
-    events = Evento.objects.filter(
-        usuario=request.user, data_evento__lt=event_passed_date
-    ).order_by("data_evento")
-    data = {"eventos": events}
+    events = models.Event.objects.filter(user=request.user, event_date__lt=event_passed_date).order_by("event_date")
 
-    return render(request, "eventos-passados.html", data)
+    data = {"events": events}
+    return render(request, "past-schedules.html", data)
 
 
-@login_required(login_url="/login/")
-def add_update_event(request):
+@login_required()
+def create_or_update_event(request):
     event_id = request.GET.get("id")
-    data = {}
-
-    if event_id:
-        data["evento"] = Evento.objects.get(id=event_id)
-
-        if data["evento"].usuario != request.user:
-            return redirect("/")
-
-    return render(request, "evento.html", data)
-
-
-@login_required(login_url="/login/")
-def submit_event(request):
-    if request.POST:
-        event_id = request.POST.get("id")
-        user = request.user
-        title = request.POST.get("titulo")
-        event_location = request.POST.get("local")
-        event_date = request.POST.get("data_evento")
-        description = request.POST.get("descricao")
-
-        if title == "":
-            messages.error(request, "O campo título é obrigatório")
-
-            return redirect("/agenda/evento/")
-        try:
-            if not event_id:
-                Evento.objects.create(
-                    usuario=user,
-                    titulo=title,
-                    data_evento=event_date,
-                    local=event_location,
-                    descricao=description,
-                )
-            else:
-                event = Evento.objects.get(id=event_id)
-
-                if event.usuario == user:
-                    event.titulo = title
-                    event.local = event_location
-                    event.data_evento = event_date
-                    event.descricao = description
-                    event.save()
-        except ValidationError:
-            messages.error(request, "Selecione uma data valida")
-
-            return redirect("/agenda/evento/")
-
-    return redirect("/")
-
-
-@login_required(login_url="/login/")
-def delete_event(request, id_evento):
+    event = None
+    
     try:
-        event = Evento.objects.get(id=id_evento)
+        if event_id:
+            event = models.Event.objects.get(id=event_id)
+    except models.Event.DoesNotExist:
+        return HttpResponseNotFound()
+    
+    form = forms.EventForm(request.POST or None, instance=event)
+    if event is not None and event.user != request.user:
+        return HttpResponseForbidden()
+            
+    if request.method == "POST" and form.is_valid():
+        event = form.save(commit=False)
+        event.user = request.user
+        event.save()
+        messages.success(request, f"Evento {'atualizado' if event_id else 'adicionado'} com sucesso!!!")
+        
+        return redirect("root")
+    
+    data = {"form": form}
+    return render(request, "event.html", data)
 
-        if event.usuario == request.user:
+
+@login_required()
+def delete_event(request, event_id):
+    try:
+        event = models.Event.objects.get(id=event_id)
+
+        if event.user == request.user:
             event.delete()
-            return redirect("/")
+            messages.success(request, "Evento deletado com sucesso!!!")
+            
+            return redirect("root")
         else:
-            raise HttpResponseForbidden()
-    except Evento.DoesNotExist:
-        raise Http404()
+            return HttpResponseForbidden()
+    except models.Evento.DoesNotExist:
+        return HttpResponseNotFound()
 
 
-def json_list_events(request, id_usuario):
-    user = User.objects.get(id=id_usuario)
-    events = Evento.objects.filter(usuario=user).values("id", "titulo")
+def json_list_events(request, user_id):
+    try:
+        user = models.User.objects.get(id=user_id)
+    except models.User.DoesNotExist:
+        return HttpResponseNotFound()
+    
+    events = models.Event.objects.filter(user=user).values("id", "title")
     return JsonResponse(
         list(events), safe=False, json_dumps_params={"indent": 4, "ensure_ascii": False}
     )
