@@ -14,19 +14,20 @@
         <title>Agenda</title>
     </head>
 
-    <body>
+    <body class="prevent-transition-on-load">
         <header>
-            <button id="title" onclick="location.href = '{% url 'root' %}'">Agenda</button>
+            <button class="title" onclick="location.href = '{% url 'root' %}'">Agenda</button>
 
             {% if user.is_authenticated %}
-                <div id="right-panel">
-                    <button onclick="location.href = '{% url 'user' %}'">{{ user|capfirst }}</button>
-                    <button onclick="location.href = '{% url 'logout' %}'">Logout</button>
+                <div class="double-button fixed-right">
+                    <button class="gray-button large-button hide-large-text" onclick="location.href = '{% url 'user' %}'">{{ user|capfirst }}</button>
+                    <button class="gray-button large-button" onclick="location.href = '{% url 'logout' %}'">Logout</button>
                 </div>
             {% endif %}
         </header>
 
         {% block page %}
         {% endblock page %}
+        <script src={% static 'js/general.js' %}></script>
     </body>
 </html>

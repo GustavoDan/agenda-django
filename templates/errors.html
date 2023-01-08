@@ -1,6 +1,6 @@
 {% load filters_and_tags %}
 {% if form.errors %}
-    <div id="error-list" class="margin-top">
+    <div class="error-list">
         <strong>Erro:</strong>
         {% for error in form.errors.items %}
             <div class="error-list-line">

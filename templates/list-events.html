@@ -1,20 +1,12 @@
-<ul id="event-list">
+<div class="event-list">
     {% for event in events %}
-        <li>
-            <span class="
-                {% if event.has_passed %}
-                    event-passed
-                {% elif event.will_happen_soon %}
-                    event-soon
-                {% else %}
-                    event
-                {% endif %}
-            ">
-                {{ event.title }} - {{ event.get_event_date }}
-            </span>
-
-            ( <a href="{% url 'event' %}?id={{ event.id }}">Editar</a> /
-            <a href="{% url 'delete_event' event.id %}">Excluir</a> )
-        </li>
+            <div class="event{% if event.has_passed %} event-passed{% elif event.will_happen_soon %} event-soon{% endif %}">
+                <span class="hide-large-text">{{ event.title }}</span>
+                <pre class="margin-right"> - {{ event.get_event_date }}</pre>
+                <div class="double-button">
+                    <button class="yellow-button" onclick="location.href = '{% url 'event' %}?id={{ event.id }}'">Editar</button>
+                    <button class="red-button" onclick="location.href = '{% url 'delete_event' event.id %}'">Excluir</button>
+                </div>
+            </div>
     {% endfor %}
-</ul>
+</div>

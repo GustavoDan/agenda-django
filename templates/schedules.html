@@ -1,11 +1,11 @@
 {% extends "model-page.html" %}
 {% block content %}
-    <span class="subtitle">Agendamentos</span>
 
-    <div class="actions">
-        <button class="action-button" onclick="location.href = '{% url 'event' %}'">Novo Evento</button>
-        <button class="action-button" onclick="location.href = '{% url 'past-schedules' %}'">Eventos Passados</button>
-    </div>
+<div class="actions">
+    <button class="orange-button" onclick="location.href = '{% url 'event' %}'">Novo Evento</button>
+    <button class="orange-button" onclick="location.href = '{% url 'past-schedules' %}'">Eventos Passados</button>
+</div>
+<span class="subtitle">Agendamentos</span>
 
     {% include "list-events.html" %}
 {% endblock content %}

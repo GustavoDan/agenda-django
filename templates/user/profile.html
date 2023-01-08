@@ -2,20 +2,22 @@
 {% load static %}
 {% block content %}
     <span class="subtitle">{{ user|capfirst }}</span>
-    <a href="{% url 'change-password' %}" class="change-password-link">Mudar Senha</a>
+    <a href={% url 'change-password' %}>Mudar Senha</a>
 
     <form action="" method="post">{% csrf_token %}
         {% for field in form %}
-            {{ field.label }} 
-            <div class="input-with-action">
-                {{ field }}  
-                <label class="input-action" for="id_{{ field.name }}" onclick="toggle(event)">Editar</label>
+            <div class="form-field">
+                {{ field.label }} 
+                <div class="input-with-action">
+                    {{ field }} 
+                    <label class="input-action" for="id_{{ field.name }}" onclick="toggle(event)">Editar</label>
+                </div>
             </div>
         {% endfor %}
 
         <div class="actions">
-            <button class="action-button" type="submit">Salvar</button>
-            <button class="action-button" type="button" onclick="location.href = '{% url 'root' %}'">Voltar</button>
+            <button class="blue-button" type="submit">Salvar</button>
+            <button class="blue-button" type="button" onclick="location.href = '{% url 'root' %}'">Voltar</button>
         </div>
         
         {% include 'errors.html' %}
