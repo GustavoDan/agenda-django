@@ -1,11 +1,11 @@
-{% extends "model-header.html" %}
+{% extends 'base/model-header.html' %}
 {% load static %}
 {% block page %}
     <div class="content">
         {% if messages %}
             <div class="message-container">
                 {% for message in messages %}
-                    <span class="message {{message.tags}}-message">{{ message }}</span>
+                    <span class="message {{ message.tags }}-message">{{ message }}</span>
                 {% endfor %}
             </div>
         {% endif %}
@@ -14,6 +14,6 @@
         {% endblock content %}
     </div>
 
-    {% include "model-footer.html" %}
+    {% include 'base/model-footer.html' %}
     <script src={% static 'js/messages.js' %}></script>
 {% endblock page %}

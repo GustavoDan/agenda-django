@@ -1,8 +1,8 @@
-{% extends 'model-page.html' %}
+{% extends 'base/model-page.html' %}
 {% block content %}
     <span>Ainda não tem uma conta? <a href={% url 'register' %}>Registrar-se</a></span>
-
     <span class="subtitle">Login</span>
+
     <form action={% url 'login' %} method="post"> {% csrf_token %}
         {% for field in form %}
             <div class="form-field">{{ field.label }} {{ field }}</div>
@@ -11,7 +11,7 @@
         <div class="actions">
             <button class="blue-button" type="submit">Logar</button>
         </div>
-
-        {% include 'errors.html' %}
     </form>
+
+    {% include 'components/error-list.html' %}
 {% endblock content %}

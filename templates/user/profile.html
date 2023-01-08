@@ -1,4 +1,4 @@
-{% extends "model-page.html" %}
+{% extends 'base/model-page.html' %}
 {% load static %}
 {% block content %}
     <span class="subtitle">{{ user|capfirst }}</span>
@@ -19,9 +19,8 @@
             <button class="blue-button" type="submit">Salvar</button>
             <button class="blue-button" type="button" onclick="location.href = '{% url 'root' %}'">Voltar</button>
         </div>
-        
-        {% include 'errors.html' %}
     </form>
-
+    
+    {% include 'components/error-list.html' %}
     <script src={% static 'js/profile.js' %}></script>
 {% endblock content %}

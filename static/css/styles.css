@@ -215,6 +215,11 @@ button.hide-large-text {
     max-width: 15vw;
 }
 
+.wrap-long-word {
+    max-width: 50vw;
+    word-break: break-all;
+}
+
 .fixed-right {
     position: absolute;
     right: 0;
@@ -324,6 +329,7 @@ button.hide-large-text {
     gap: 0.55vh;
     
     color: red;
+    text-align: center;
 }
 
 .error-list-line {

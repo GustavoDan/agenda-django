@@ -1,9 +1,9 @@
-{% extends '../model-page.html' %}
+{% extends 'base/model-page.html' %}
 {% load filters_and_tags %}
 {% block content %}
     <span>Já tem uma conta? <a href={% url 'login' %}>Fazer login</a></span>
-    
     <span class="subtitle">Registrar</span>
+    
     <form action="" method="post"> {% csrf_token %}
         {% for field in form %}
             <div class="form-field">{{ field.label }} {{ field }}</div>
@@ -12,14 +12,14 @@
         <div class="actions">
             <button class="blue-button" type="submit">Registrar</button>
         </div>
-
-        {% include 'errors.html' %}
-
-        <div class="form-help">
-            O campo usuário deve conter {% replace form.username.help_text 'Obrigatório.' '' %}
-            {% for line in form.password1.help_text|striptags|split:'.' %}
-                <span>{{ line }}</span>
-            {% endfor %}
-        </div>
     </form>
+    
+    {% include 'components/error-list.html' %}
+
+    <div class="form-help">
+        O campo usuário deve conter {% replace form.username.help_text 'Obrigatório.' '' %}
+        {% for line in form.password1.help_text|striptags|split:'.' %}
+            <span>{{ line }}</span>
+        {% endfor %}
+    </div>
 {% endblock content %}

@@ -1,7 +1,6 @@
-{% extends "model-page.html" %}
+{% extends 'base/model-page.html' %}
 {% block content %}
     <span class="subtitle">Evento</span>
-
     <form action="" method="post"> {% csrf_token %}
             {% for field in form %}
                 <div class="form-field">{{ field.label }} {{ field }}</div>
@@ -11,7 +10,7 @@
             <button class="blue-button" type="submit">Salvar</button>
             <button class="blue-button" type="button" onclick="window.location.href = '{% url 'root' %}'">Voltar</button>
         </div>
-
-        {% include 'errors.html' %}
     </form>
+
+    {% include 'components/error-list.html' %}
 {% endblock content %}

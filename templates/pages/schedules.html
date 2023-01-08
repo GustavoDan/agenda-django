@@ -1,4 +1,4 @@
-{% extends "model-page.html" %}
+{% extends 'base/model-page.html' %}
 {% block content %}
 
 <div class="actions">
@@ -7,5 +7,5 @@
 </div>
 <span class="subtitle">Agendamentos</span>
 
-    {% include "list-events.html" %}
+    {% include 'event/list.html' %}
 {% endblock content %}

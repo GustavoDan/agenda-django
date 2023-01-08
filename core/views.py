@@ -72,7 +72,7 @@ def list_events(request):
     events = models.Event.objects.filter(user=request.user, event_date__gt=event_passed_date).order_by("event_date")
     
     data = {"events": events}
-    return render(request, "schedules.html", data)
+    return render(request, "pages/schedules.html", data)
 
 
 @login_required()
@@ -81,7 +81,7 @@ def list_passed_events(request):
     events = models.Event.objects.filter(user=request.user, event_date__lt=event_passed_date).order_by("event_date")
 
     data = {"events": events}
-    return render(request, "past-schedules.html", data)
+    return render(request, "pages/past-schedules.html", data)
 
 
 @login_required()
@@ -92,13 +92,12 @@ def create_or_update_event(request):
     try:
         if event_id:
             event = models.Event.objects.get(id=event_id)
+            if event.user != request.user:
+                return HttpResponseForbidden()
     except models.Event.DoesNotExist:
         return HttpResponseNotFound()
     
-    form = forms.EventForm(request.POST or None, instance=event)
-    if event is not None and event.user != request.user:
-        return HttpResponseForbidden()
-            
+    form = forms.EventForm(request.POST or None, instance=event)            
     if request.method == "POST" and form.is_valid():
         event = form.save(commit=False)
         event.user = request.user
@@ -108,23 +107,39 @@ def create_or_update_event(request):
         return redirect("root")
     
     data = {"form": form}
-    return render(request, "event.html", data)
+    return render(request, "event/create_or_update.html", data)
 
 
 @login_required()
 def delete_event(request, event_id):
     try:
         event = models.Event.objects.get(id=event_id)
-
-        if event.user == request.user:
-            event.delete()
-            messages.success(request, "Evento deletado com sucesso!!!")
-            
-            return redirect("root")
-        else:
+        
+        if event.user != request.user:
             return HttpResponseForbidden()
-    except models.Evento.DoesNotExist:
+    except models.Event.DoesNotExist:
         return HttpResponseNotFound()
+    
+    if request.method == "POST":
+        event.delete()
+        messages.success(request, "Evento deletado com sucesso!!!")
+        
+        return redirect("root")
+
+    event_dict = {}
+    for field in models.Event._meta.get_fields():
+        if field.name.lower() not in ("id", "user", "title"):
+            value = getattr(event, field.name)
+            if type(value) is datetime:
+                value = value.strftime("%x %H:%M Hrs")
+            
+            event_dict[field.name] = {
+                "name": field.verbose_name,
+                "value": value if value else "Campo vazio"
+                }
+
+    data =  {"event": event_dict, "event_title": getattr(event, "title")}
+    return render(request, "event/delete.html", data)
 
 
 def json_list_events(request, user_id):
