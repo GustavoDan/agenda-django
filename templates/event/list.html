@@ -4,8 +4,8 @@
                 <span class="hide-large-text">{{ event.title }}</span>
                 <pre class="margin-right"> - {{ event.get_event_date }}</pre>
                 <div class="double-button">
-                    <button class="yellow-button" onclick="location.href = '{% url 'event' %}?id={{ event.id }}'">Editar</button>
-                    <button class="red-button" onclick="location.href = '{% url 'delete_event' event.id %}'">Excluir</button>
+                    <button class="yellow-button" onclick="location.href = '{% url 'update-event' event.id %}'">Editar</button>
+                    <button class="red-button" onclick="location.href = '{% url 'delete-event' event.id %}'">Excluir</button>
                 </div>
             </div>
     {% endfor %}

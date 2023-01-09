@@ -8,12 +8,14 @@
 }
 
 body {
+    width: 100vw;
     height: 100vh;
     display: flex;
     flex-direction: column;
     
     margin: 0;
     background-color: lightcyan;
+    overflow: hidden;
 }
 
 body.prevent-transition-on-load * {
@@ -28,6 +30,7 @@ header {
 
     background-color: gainsboro;
     user-select: none;
+    overflow: hidden;
 }
 
 form {
@@ -98,10 +101,11 @@ footer {
 
     background-color: gainsboro;
     user-select: none;
+    overflow: hidden;
 }
 
 .title {
-    margin: 1.3vh;
+    margin: 1.3vh 1vw;
     background-color: transparent;
     padding: 0;
     font-size: 3.5rem;
@@ -212,7 +216,7 @@ button.hide-large-text {
 }
 
 .large-button.hide-large-text {
-    max-width: 15vw;
+    max-width: 10vw;
 }
 
 .wrap-long-word {
@@ -238,6 +242,8 @@ button.hide-large-text {
     gap: 0.75vh;
 
     margin: 1vh;
+    font-size: 1.1rem;
+    overflow: hidden;
 }
 
 .actions {
@@ -255,7 +261,6 @@ button.hide-large-text {
 
     margin: 0;
     padding: 0;
-    font-size: 1.2rem;
 }
 
 .event::before {
@@ -374,5 +379,107 @@ button.hide-large-text {
         margin: 0;
         padding: 0;
         overflow: hidden;
+    }
+}
+
+
+@media only screen and (max-width: 1500px) {
+    button.hide-large-text {
+        max-width: 6.5vw;
+    }
+
+    .large-button.hide-large-text {
+        max-width: 13vw;
+    }
+}
+
+@media only screen and (max-width: 1200px) {
+    input, textarea {
+        max-width: 20vw;
+    }
+
+    button.hide-large-text {
+        max-width: 8vw;
+    }
+
+    .large-button.hide-large-text {
+        max-width: 16vw;
+    }
+
+    header {
+        justify-content: space-between;
+    }
+    
+    header .fixed-right {
+        position: unset;
+    }
+}
+
+@media only screen and (max-width: 900px) {
+    button {
+        font-size: 0.9rem;
+        padding: 7px;
+        border-radius: 9px;
+    }
+
+    input, textarea {
+        max-width: 25vw;
+    }
+
+    .double-button button {
+        padding: 5px 6px;
+        border-width: 4px;
+    }
+
+    .large-button {
+        font-size: 1.1rem;
+    }
+
+    button.hide-large-text {
+        max-width: 10vw;
+    }
+
+    .large-button.hide-large-text {
+        max-width: 20vw;
+    }
+
+    .title {
+        font-size: 2.5rem;
+    }
+
+    .subtitle {
+        font-size: 1.5rem;
+    }
+
+    .content {
+        font-size: 0.9rem;
+    }
+}
+
+@media only screen and (max-width: 768px) {
+    input, textarea {
+        max-width: 30vw;
+    }
+
+    button.hide-large-text {
+        max-width: 12.5vw;
+    }
+
+    .large-button.hide-large-text {
+        max-width: 25vw;
+    }
+}
+
+@media only screen and (max-width: 600px) {
+    input, textarea {
+        max-width: 75vw;
+    }
+
+    button.hide-large-text {
+        max-width: 12.5vw;
+    }
+
+    .large-button.hide-large-text {
+        max-width: 30vw;
     }
 }

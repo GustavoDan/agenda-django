@@ -27,9 +27,10 @@ urlpatterns = [
     path("logout/", views.logout_user, name="logout"),
     path("user/", views.user_page, name="user"),
     path("user/change-password/", views.CustomPasswordChangeView.as_view(), name="change-password"),
+    path("event/create", views.create_or_update_event, name="create-event"),
+    path("event/<int:event_id>/update", views.create_or_update_event, name="update-event"),
+    path("event/<int:event_id>/delete", views.delete_event, name="delete-event"),
     path("schedules/", views.list_events, name="root"),
     path("schedules/past/", views.list_passed_events, name="past-schedules"),
-    path("schedules/event/", views.create_or_update_event, name="event"),
-    path("schedules/event/<int:event_id>/delete", views.delete_event, name="delete_event"),
     path("schedules/json/<int:user_id>/", views.json_list_events),
 ]

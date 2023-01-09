@@ -85,24 +85,23 @@ def list_passed_events(request):
 
 
 @login_required()
-def create_or_update_event(request):
-    event_id = request.GET.get("id")
-    event = None
-    
-    try:
-        if event_id:
+def create_or_update_event(request, event_id = None):
+    if event_id:
+        try:
             event = models.Event.objects.get(id=event_id)
-            if event.user != request.user:
-                return HttpResponseForbidden()
-    except models.Event.DoesNotExist:
-        return HttpResponseNotFound()
+        except models.Event.DoesNotExist:
+            return HttpResponseNotFound()     
+        if event.user != request.user:
+            return HttpResponseForbidden()
+    else:
+        event = None
     
     form = forms.EventForm(request.POST or None, instance=event)            
     if request.method == "POST" and form.is_valid():
         event = form.save(commit=False)
         event.user = request.user
         event.save()
-        messages.success(request, f"Evento {'atualizado' if event_id else 'adicionado'} com sucesso!!!")
+        messages.success(request, f"Evento {'atualizado' if event_id is not None else 'adicionado'} com sucesso!!!")
         
         return redirect("root")
     
@@ -114,12 +113,11 @@ def create_or_update_event(request):
 def delete_event(request, event_id):
     try:
         event = models.Event.objects.get(id=event_id)
-        
-        if event.user != request.user:
-            return HttpResponseForbidden()
     except models.Event.DoesNotExist:
         return HttpResponseNotFound()
-    
+    if event.user != request.user:
+        return HttpResponseForbidden()
+
     if request.method == "POST":
         event.delete()
         messages.success(request, "Evento deletado com sucesso!!!")
