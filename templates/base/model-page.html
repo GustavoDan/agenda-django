@@ -2,17 +2,23 @@
 {% load static %}
 {% block page %}
     <div class="content">
-        {% if messages %}
-            <div class="message-container">
-                {% for message in messages %}
-                    <span class="message {{ message.tags }}-message">{{ message }}</span>
-                {% endfor %}
-            </div>
-        {% endif %}
-
         {% block content %}
         {% endblock content %}
     </div>
+    
+    <!-- Messages Template (hidden, será usado pelo JS) -->
+    {% if messages %}
+        <script>
+            const djangoMessages = [
+                {% for message in messages %}
+                {
+                    text: "{{ message|escapejs }}",
+                    type: "{{ message.tags|default:'info' }}"
+                }{% if not forloop.last %},{% endif %}
+                {% endfor %}
+            ];
+        </script>
+    {% endif %}
 
     {% include 'base/model-footer.html' %}
     <script src={% static 'js/messages.js' %}></script>

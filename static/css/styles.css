@@ -603,55 +603,126 @@ a:active {
     }
 }
 
-/* Messages */
-.message-container {
+/* Toast Container */
+.toast-container {
+    position: fixed;
+    bottom: 80px;
+    right: 20px;
+    z-index: 1000;
     display: flex;
-    flex-direction: column;
+    flex-direction: column-reverse;
+    gap: 0.75rem;
+    max-width: 400px;
+    width: 100%;
+    pointer-events: none;
+}
+
+/* Toast */
+.toast {
+    display: flex;
     align-items: center;
+    justify-content: space-between;
     gap: 1rem;
-    width: 100%;
-    max-width: 500px;
-}
-
-.message {
-    width: 100%;
-    padding: 1rem 1.5rem;
+    padding: 1rem 1.25rem;
     border-radius: 12px;
-    text-align: center;
+    box-shadow: var(--shadow-lg);
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
     font-weight: 500;
-    box-shadow: var(--shadow-md);
-    animation: slideDown 0.3s ease-out;
+    opacity: 0;
+    transform: translateY(100px);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: auto;
+    min-width: 300px;
+    max-width: 100%;
 }
 
-@keyframes slideDown {
-    from {
-        opacity: 0;
-        transform: translateY(-10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+.toast-show {
+    opacity: 1;
+    transform: translateX(0);
 }
 
-.success-message {
-    background: var(--gradient-success);
-    color: white;
+.toast-hide {
+    opacity: 0;
+    transform: translateY(100px);
 }
 
-.error-message {
-    background: var(--gradient-danger);
-    color: white;
+.toast-content {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex: 1;
+    min-width: 0;
 }
 
-.info-message {
-    background: var(--gradient-primary);
-    color: white;
+.toast-icon {
+    font-size: 1.25rem;
+    font-weight: bold;
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
 }
 
-.warning-message {
-    background: var(--gradient-warning);
-    color: var(--bg-primary);
+.toast-message {
+    flex: 1;
+    word-wrap: break-word;
+    line-height: 1.4;
+}
+
+.toast-close {
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 1.5rem;
+    line-height: 1;
+    cursor: pointer;
+    padding: 0;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    transition: all var(--transition-fast);
+    flex-shrink: 0;
+    box-shadow: none;
+}
+
+.toast-close:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-primary);
+    transform: none;
+}
+
+.toast-close:active {
+    transform: scale(0.9);
+}
+
+/* Toast Types */
+.toast-success .toast-icon {
+    color: var(--accent-success);
+    background: rgba(16, 185, 129, 0.2);
+}
+
+.toast-error .toast-icon {
+    color: var(--accent-danger);
+    background: rgba(239, 68, 68, 0.2);
+}
+
+.toast-warning .toast-icon {
+    color: var(--accent-warning);
+    background: rgba(245, 158, 11, 0.2);
+}
+
+.toast-info .toast-icon {
+    color: var(--accent-primary);
+    background: rgba(99, 102, 241, 0.2);
 }
 
 /* Form Help */
@@ -817,6 +888,18 @@ footer p {
 }
 
 @media only screen and (max-width: 768px) {
+    .toast-container {
+        bottom: 70px;
+        right: 10px;
+        left: 10px;
+        max-width: none;
+    }
+
+    .toast {
+        min-width: auto;
+        width: 100%;
+    }
+
     header {
         flex-direction: row;
         justify-content: space-between;
@@ -887,6 +970,23 @@ footer p {
 }
 
 @media only screen and (max-width: 480px) {
+    .toast-container {
+        bottom: 60px;
+        right: 8px;
+        left: 8px;
+    }
+
+    .toast {
+        padding: 0.875rem 1rem;
+        font-size: 0.9rem;
+    }
+
+    .toast-icon {
+        width: 20px;
+        height: 20px;
+        font-size: 1rem;
+    }
+
     .title {
         font-size: 1.25rem;
         gap: 0.5rem;
