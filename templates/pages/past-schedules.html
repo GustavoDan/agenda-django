@@ -1,9 +1,9 @@
 {% extends 'base/model-page.html' %}
 {% block content %}
     <div class="actions">
-        <button class="orange-button" onclick="location.href = '{% url 'root' %}'">Voltar</button>
+        <button class="secondary-button" onclick="location.href = '{% url 'root' %}'">Voltar</button>
     </div>
     
     <span class="subtitle">Eventos passados</span>
-    {% include 'event/list.html' %}
+    {% include 'event/list.html' with is_past=True %}
 {% endblock %}

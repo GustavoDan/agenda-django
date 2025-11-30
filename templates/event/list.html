@@ -1,12 +1,34 @@
 <div class="event-list">
-    {% for event in events %}
-            <div class="event{% if event.has_passed %} event-passed{% elif event.will_happen_soon %} event-soon{% endif %}">
-                <span class="hide-large-text">{{ event.title }}</span>
-                <pre class="margin-right"> - {{ event.get_event_date }}</pre>
-                <div class="double-button">
-                    <button class="yellow-button" onclick="location.href = '{% url 'update-event' event.id %}'">Editar</button>
-                    <button class="red-button" onclick="location.href = '{% url 'delete-event' event.id %}'">Excluir</button>
-                </div>
-            </div>
-    {% endfor %}
+    {% if events %} {% for event in events %}
+    <div
+        class="event{% if event.has_passed %} event-passed{% elif event.will_happen_soon %} event-soon{% endif %}"
+    >
+        <span class="hide-large-text">{{ event.title }}</span>
+        <pre class="margin-right">{{ event.get_event_date }}</pre>
+        <div class="double-button">
+            <button
+                class="yellow-button"
+                onclick="location.href = '{% url 'update-event' event.id %}'"
+            >
+                Editar
+            </button>
+            <button
+                class="red-button"
+                onclick="location.href = '{% url 'delete-event' event.id %}'"
+            >
+                Excluir
+            </button>
+        </div>
+    </div>
+    {% endfor %} {% else %}
+    <div class="empty-state">
+        <div class="empty-state-icon">📅</div>
+        <h3 class="empty-state-title">Nenhum evento encontrado</h3>
+        <p class="empty-state-message">
+            {% if is_past %} Você ainda não possui eventos passados. {% else %}
+            Você ainda não possui eventos agendados. Que tal criar um novo
+            evento? {% endif %}
+        </p>
+    </div>
+    {% endif %}
 </div>

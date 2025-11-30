@@ -71,7 +71,7 @@ def list_events(request):
     event_passed_date = datetime.now() - timedelta(hours=1)
     events = models.Event.objects.filter(user=request.user, event_date__gt=event_passed_date).order_by("event_date")
     
-    data = {"events": events}
+    data = {"events": events, "is_past": False}
     return render(request, "pages/schedules.html", data)
 
 
@@ -80,7 +80,7 @@ def list_passed_events(request):
     event_passed_date = datetime.now() - timedelta(hours=1)
     events = models.Event.objects.filter(user=request.user, event_date__lt=event_passed_date).order_by("event_date")
 
-    data = {"events": events}
+    data = {"events": events, "is_past": True}
     return render(request, "pages/past-schedules.html", data)
 
 
